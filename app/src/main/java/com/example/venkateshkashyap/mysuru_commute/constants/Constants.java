@@ -1,0 +1,22 @@
+package com.example.venkateshkashyap.mysuru_commute.constants;
+
+import android.os.Build;
+
+/**
+ * Created by srivatsam on 05/04/16.
+ */
+public class Constants {
+
+
+    public static String BASE_URL = "https://mcb-api.herokuapp.com/";
+
+
+    public static final String MDPI = "mdpi";
+    public static final String HDPI = "hdpi";
+    public static final String XHDPI = "xhdpi";
+    public static final String XXHDPI = "xxhdpi";
+    public static final String XXXHDPI = "xxxhdpi";
+    public static final String LDPI = "ldpi";
+
+
+}
