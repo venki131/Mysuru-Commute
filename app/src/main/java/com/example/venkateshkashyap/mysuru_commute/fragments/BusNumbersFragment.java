@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.venkateshkashyap.mysuru_commute.R;
+import com.example.venkateshkashyap.mysuru_commute.Utils.Utils;
 import com.example.venkateshkashyap.mysuru_commute.Utils.ViewUtils;
 import com.example.venkateshkashyap.mysuru_commute.adapters.BusNumbersRecyclerViewAdapter;
 import com.example.venkateshkashyap.mysuru_commute.helpers.BusNumbersHelper;
@@ -126,6 +127,16 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+
+        if(isAdded()&& isVisible() && isVisibleToUser){
+            Utils.hideKeyboard(getActivity());
+        }
+
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override

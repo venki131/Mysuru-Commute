@@ -67,6 +67,7 @@ public class BusStopsHelper extends BaseHelper{
 
         @Override
         public void onFailure(Call<BusStops> call, Throwable t) {
+            mOnBusStopsResponseReceived.onFailure();
             super.onFailure(call, t);
         }
     };
