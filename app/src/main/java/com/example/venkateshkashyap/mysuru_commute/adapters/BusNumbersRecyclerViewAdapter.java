@@ -70,8 +70,61 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
     public void setList(BusNumbers busNumbersData) {
         mBusNumbersData = busNumbersData;
         mValues.clear();
-        mValues.addAll(mBusNumbersData.getData());
-        notifyDataSetChanged();
+        if(mBusNumbersData!=null && mBusNumbersData.getData()!=null && mBusNumbersData.getData().size()!=0) {
+            mValues.addAll(mBusNumbersData.getData());
+            notifyDataSetChanged();
+        }
+    }
+
+    public void animateTo(List<String> models) {
+        applyAndAnimateRemovals(models);
+        applyAndAnimateAdditions(models);
+        applyAndAnimateMovedItems(models);
+    }
+
+    private void applyAndAnimateRemovals(List<String> newModels) {
+        for (int i = mValues.size() - 1; i >= 0; i--) {
+            final String model = mValues.get(i);
+            if (!newModels.contains(model)) {
+                removeItem(i);
+            }
+        }
+    }
+
+    private void applyAndAnimateAdditions(List<String> newModels) {
+        for (int i = 0, count = newModels.size(); i < count; i++) {
+            final String  model = newModels.get(i);
+            if (!mValues.contains(model)) {
+                addItem(i, model);
+            }
+        }
+    }
+
+    private void applyAndAnimateMovedItems(List<String> newModels) {
+        for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
+            final String model = newModels.get(toPosition);
+            final int fromPosition = mValues.indexOf(model);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                moveItem(fromPosition, toPosition);
+            }
+        }
+    }
+
+    public String removeItem(int position) {
+        final String model = mValues.remove(position);
+        notifyItemRemoved(position);
+        return model;
+    }
+
+    public void addItem(int position, String model) {
+        mValues.add(position, model);
+        notifyItemInserted(position);
+    }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        final String model = mValues.remove(fromPosition);
+        mValues.add(toPosition, model);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override

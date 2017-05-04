@@ -1,28 +1,33 @@
 package com.example.venkateshkashyap.mysuru_commute.fragments;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.venkateshkashyap.mysuru_commute.R;
-import com.example.venkateshkashyap.mysuru_commute.Utils.DialogUtils;
 import com.example.venkateshkashyap.mysuru_commute.Utils.ViewUtils;
 import com.example.venkateshkashyap.mysuru_commute.adapters.BusNumbersRecyclerViewAdapter;
 import com.example.venkateshkashyap.mysuru_commute.helpers.BusNumbersHelper;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +36,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnBusNumbersResponseReceived {
+public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnBusNumbersResponseReceived, SearchView.OnQueryTextListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -41,7 +46,9 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     private OnListFragmentInteractionListener mListener;
     private BusNumbersRecyclerViewAdapter mBusNumbersRecyclerViewAdapter;
     private RelativeLayout mErrorLayout;
+    private RelativeLayout mProgressLayout;
     private RecyclerView mRecyclerView;
+    private BusNumbers mItemsList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,7 +71,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRetainInstance(true);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -75,6 +82,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_busnumbers_list, container, false);
         mErrorLayout = (RelativeLayout) view.findViewById(R.id.rl_error_layout);
+        mProgressLayout = (RelativeLayout) view.findViewById(R.id.rl_progress_view);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
         // Set the adapter
 
@@ -98,7 +106,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.setAdapter(mBusNumbersRecyclerViewAdapter);
 
-        new BusNumbersHelper(getContext()).getBusNumbers(this, mErrorLayout, mRecyclerView);
+        new BusNumbersHelper(getContext()).getBusNumbers(this, mErrorLayout, mRecyclerView, mProgressLayout);
         return view;
     }
 
@@ -122,14 +130,28 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_bus_numbers,menu);
+
+        inflater.inflate(R.menu.menu_bus_numbers, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(getActivity().SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
 
     }
 
     private void updateList(BusNumbers busNumbersData) {
-        if (mErrorLayout.getVisibility() == View.VISIBLE) {
+        if (mRecyclerView.getVisibility() == View.GONE) {
             ViewUtils.hideTheViews(mErrorLayout);
+            ViewUtils.hideTheViews(mProgressLayout);
             ViewUtils.showTheViews(mRecyclerView);
         }
         mBusNumbersRecyclerViewAdapter.setList(busNumbersData);
@@ -138,16 +160,34 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
 
     @Override
     public void onBusNumbersResponseReceived(BusNumbers busNumbersData) {
-        DialogUtils.hideProgressDialog();
+        ViewUtils.hideTheViews(mProgressLayout);
         if (busNumbersData != null && busNumbersData.getData().size() != 0) {
-            updateList(busNumbersData);
+            mItemsList = busNumbersData;
+            updateList(mItemsList);
         }
     }
 
     @Override
     public void onFailure() {
 
-        DialogUtils.hideProgressDialog();
+        ViewUtils.hideTheViews(mProgressLayout);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        if (!TextUtils.isEmpty(query)) {
+            final List<String> filteredModelList = filter(mItemsList.getData(), query);
+            mBusNumbersRecyclerViewAdapter.animateTo(filteredModelList);
+            mRecyclerView.scrollToPosition(0);
+        } else {
+            mBusNumbersRecyclerViewAdapter.setList(mItemsList);
+        }
+        return true;
     }
 
     /**
@@ -160,6 +200,21 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
+    private List<String> filter(List<String> models, String query) {
+        query = query.toLowerCase();
+
+        final List<String> filteredModelList = new ArrayList<>();
+        for (String model : models) {
+                final String text = model.toLowerCase();
+                if (text.contains(query)) {
+                    filteredModelList.add(model);
+                }
+
+        }
+        return filteredModelList;
+    }
+
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(String item);

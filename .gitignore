@@ -37,4 +37,4 @@ ehthumbs.db
 Thumbs.db
 .idea/copyright/
 app/libs/
-app/src/main/res/drawable/
+build/intermediates/

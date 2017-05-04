@@ -6,42 +6,43 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
     <EditText
+        android:id="@+id/txt_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_destination"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/dp_40"
         android:layout_marginRight="@dimen/dp_40"
-        android:layout_below="@+id/txt_source"
-        android:hint="Destination"
-        android:padding="@dimen/dp_5"
+        android:layout_marginTop="160dp"
+        android:background="@drawable/textbox_background_top"
         android:gravity="center_vertical"
+        android:hint="Source"
+        android:padding="@dimen/dp_5" />
+
+
+    <EditText
+        android:id="@+id/txt_destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_source"
+        android:layout_marginLeft="@dimen/dp_40"
+        android:layout_marginRight="@dimen/dp_40"
         android:background="@drawable/textbox_background_bottom"
-        />
+        android:gravity="center_vertical"
+        android:hint="Destination"
+        android:padding="@dimen/dp_5" />
+
 
     <Button
+        android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_search"
-        android:text="search"
-        android:gravity="center"
         android:layout_below="@+id/txt_destination"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
-        android:clickable="true"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Source"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/dp_40"
-        android:layout_marginRight="@dimen/dp_40"
-        android:id="@+id/txt_source"
-        android:padding="@dimen/dp_5"
-        android:layout_marginTop="160dp"
-        android:background="@drawable/textbox_background_top"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:clickable="true"
+        android:gravity="center"
+        android:text="search" />
 </RelativeLayout>

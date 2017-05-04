@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.venkateshkashyap.mysuru_commute.NetworkManager.NetworkManager;
 import com.example.venkateshkashyap.mysuru_commute.R;
@@ -42,23 +43,10 @@ public class BusStopsHelper extends BaseHelper{
         mOnBusStopsResponseReceived = onBusStopsResponseReceived;
 
         if(NetworkUtil.isConnectionAvailable(mContext)) {
-            DialogUtils.displayProgressDialog(mContext);
             NetworkManager.getInstance().getAllBusStops(mBusStopsCallback);
-
         }else{
-
-
-
-//                Utils.setErrorView(recyclerView,view,mContext, ContextCompat.getDrawable(mContext, R.drawable.ic_sleep),mContext.getString(R.string.no_network_title),mContext.getString(R.string.no_network_sub_text),mContext.getString(R.string.try_again),false);
-//
-//                TextView mTextViewTryAgain = (TextView) view.findViewById(R.id.text_try_again);
-//
-//                mTextViewTryAgain.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        getBusStops(onBusStopsResponseReceived,view, recyclerView);
-//                    }
-//                });
+            mOnBusStopsResponseReceived.onFailure();
+            Toast.makeText(mContext, "Please Check your Internet Connection and Try Again!", Toast.LENGTH_SHORT).show();
         }
 
     }
