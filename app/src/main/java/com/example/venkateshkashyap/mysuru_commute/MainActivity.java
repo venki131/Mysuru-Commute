@@ -1,9 +1,12 @@
 package com.example.venkateshkashyap.mysuru_commute;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -17,9 +20,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
+import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
+
+import java.util.zip.Inflater;
+
+public class MainActivity extends AppCompatActivity implements BusNumbersFragment.OnListFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -60,9 +69,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        return true;
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
     }
 
     @Override
@@ -78,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentInteraction(String item) {
+
     }
 
     /**
@@ -129,7 +142,26 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            switch (position){
+                case 0:
+                    return BusNumbersFragment.newInstance(1,"Bus Numbers");
+                case 1:
+                    return BusNumbersFragment.newInstance(1,"Bus Numbers");
+                default:
+                    return BusNumbersFragment.newInstance(1,"Bus Numbers");
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position){
+                case 0:
+                    return "Bus Numbers";
+                case 1:
+                    return "Bus Numbers";
+                default:
+                    return "Bus Numbers";
+            }
         }
 
         @Override
@@ -137,18 +169,7 @@ public class MainActivity extends AppCompatActivity {
             // Show 3 total pages.
             return 3;
         }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
     }
+
+
 }

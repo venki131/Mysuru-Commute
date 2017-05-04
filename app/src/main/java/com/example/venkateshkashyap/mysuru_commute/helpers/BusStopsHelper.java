@@ -38,7 +38,7 @@ public class BusStopsHelper extends BaseHelper{
 
     private static final String TAG = BusStopsHelper.class.getSimpleName();
 
-    public void getBusStops(final BusStopsHelper.OnBusStopsResponseReceived onBusStopsResponseReceived, final View view,  final View recyclerView) {
+    public void getBusStops(final BusStopsHelper.OnBusStopsResponseReceived onBusStopsResponseReceived) {
         mOnBusStopsResponseReceived = onBusStopsResponseReceived;
 
         if(NetworkUtil.isConnectionAvailable(mContext)) {
@@ -47,16 +47,18 @@ public class BusStopsHelper extends BaseHelper{
 
         }else{
 
-                Utils.setErrorView(recyclerView,view,mContext, ContextCompat.getDrawable(mContext, R.drawable.ic_sleep),mContext.getString(R.string.no_network_title),mContext.getString(R.string.no_network_sub_text),mContext.getString(R.string.try_again),false);
 
-                TextView mTextViewTryAgain = (TextView) view.findViewById(R.id.text_try_again);
 
-                mTextViewTryAgain.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getBusStops(onBusStopsResponseReceived,view, recyclerView);
-                    }
-                });
+//                Utils.setErrorView(recyclerView,view,mContext, ContextCompat.getDrawable(mContext, R.drawable.ic_sleep),mContext.getString(R.string.no_network_title),mContext.getString(R.string.no_network_sub_text),mContext.getString(R.string.try_again),false);
+//
+//                TextView mTextViewTryAgain = (TextView) view.findViewById(R.id.text_try_again);
+//
+//                mTextViewTryAgain.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        getBusStops(onBusStopsResponseReceived,view, recyclerView);
+//                    }
+//                });
         }
 
     }

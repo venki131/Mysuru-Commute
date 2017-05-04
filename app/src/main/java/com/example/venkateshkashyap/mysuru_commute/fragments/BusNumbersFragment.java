@@ -3,15 +3,22 @@ package com.example.venkateshkashyap.mysuru_commute.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.venkateshkashyap.mysuru_commute.R;
 import com.example.venkateshkashyap.mysuru_commute.Utils.DialogUtils;
+import com.example.venkateshkashyap.mysuru_commute.Utils.ViewUtils;
 import com.example.venkateshkashyap.mysuru_commute.adapters.BusNumbersRecyclerViewAdapter;
 import com.example.venkateshkashyap.mysuru_commute.helpers.BusNumbersHelper;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
@@ -24,14 +31,17 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnBusNumbersResponseReceived{
+public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnBusNumbersResponseReceived {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_FRAGMENT_NAME = "fragment-name";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private BusNumbersRecyclerViewAdapter mBusNumbersRecyclerViewAdapter;
+    private RelativeLayout mErrorLayout;
+    private RecyclerView mRecyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -42,10 +52,11 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static BusNumbersFragment newInstance(int columnCount) {
+    public static BusNumbersFragment newInstance(int columnCount, String fragmentName) {
         BusNumbersFragment fragment = new BusNumbersFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_FRAGMENT_NAME, fragmentName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,22 +74,31 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_busnumbers_list, container, false);
-
+        mErrorLayout = (RelativeLayout) view.findViewById(R.id.rl_error_layout);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
 
-            mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(new BusNumbers(), mListener);
-            recyclerView.setAdapter(mBusNumbersRecyclerViewAdapter);
+        Context context = view.getContext();
+        DividerItemDecoration dividerItemDecoration;
+        if (mColumnCount <= 1) {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
 
-
+            dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                    linearLayoutManager.getOrientation());
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        } else {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, mColumnCount);
+            dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), gridLayoutManager.getOrientation());
+            mRecyclerView.setLayoutManager(gridLayoutManager);
         }
+
+        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(new BusNumbers(), mListener);
+
+
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.setAdapter(mBusNumbersRecyclerViewAdapter);
+
+        new BusNumbersHelper(getContext()).getBusNumbers(this, mErrorLayout, mRecyclerView);
         return view;
     }
 
@@ -100,15 +120,26 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
         mListener = null;
     }
 
-    private void updateList(BusNumbers busNumbersData){
-       mBusNumbersRecyclerViewAdapter.setList(busNumbersData);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_bus_numbers,menu);
+
+    }
+
+    private void updateList(BusNumbers busNumbersData) {
+        if (mErrorLayout.getVisibility() == View.VISIBLE) {
+            ViewUtils.hideTheViews(mErrorLayout);
+            ViewUtils.showTheViews(mRecyclerView);
+        }
+        mBusNumbersRecyclerViewAdapter.setList(busNumbersData);
     }
 
 
     @Override
     public void onBusNumbersResponseReceived(BusNumbers busNumbersData) {
         DialogUtils.hideProgressDialog();
-        if(busNumbersData!=null && busNumbersData.getData().size()!=0){
+        if (busNumbersData != null && busNumbersData.getData().size() != 0) {
             updateList(busNumbersData);
         }
     }

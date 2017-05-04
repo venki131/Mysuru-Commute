@@ -1,5 +1,6 @@
 package com.example.venkateshkashyap.mysuru_commute.adapters;
 
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment.OnListFragmentInteractionListener;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,13 +22,15 @@ import java.util.List;
  */
 public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbersRecyclerViewAdapter.ViewHolder> {
 
-    private BusNumbers mBusNumbersData;
-    private List<String> mValues;
+    private BusNumbers mBusNumbersData = new BusNumbers();
+    private List<String> mValues = new ArrayList<>();
     private final BusNumbersFragment.OnListFragmentInteractionListener mListener;
 
     public BusNumbersRecyclerViewAdapter(BusNumbers busNumbersData, OnListFragmentInteractionListener listener) {
         mBusNumbersData = busNumbersData;
-        mValues = mBusNumbersData.getData();
+        if(mBusNumbersData.getData()!=null) {
+            mValues = mBusNumbersData.getData();
+        }
         mListener = listener;
     }
 
@@ -54,7 +58,7 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
         });
     }
 
-    public void setList(BusNumbers busNumbersData){
+    public void setList(BusNumbers busNumbersData) {
         mBusNumbersData = busNumbersData;
         mValues.clear();
         mValues.addAll(mBusNumbersData.getData());
@@ -63,7 +67,7 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+            return mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
