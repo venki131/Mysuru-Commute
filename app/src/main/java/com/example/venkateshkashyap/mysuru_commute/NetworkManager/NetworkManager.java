@@ -3,6 +3,7 @@ package com.example.venkateshkashyap.mysuru_commute.NetworkManager;
 import android.util.Log;
 
 import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
+import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 import com.example.venkateshkashyap.mysuru_commute.models.BusStops;
 
 
@@ -35,14 +36,10 @@ public class NetworkManager {
 
 
     private Retrofit getRetroFit() {
-        Retrofit retrofit = null;
-        retrofit = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        return retrofit;
-
     }
 
 
@@ -53,10 +50,13 @@ public class NetworkManager {
         busStops.enqueue(busStopsCallBack);
     }
 
-    public void resetApiService() {
-        this.apiService = null;
-    }
 
+    public void getAllBusNumbers(Callback<BusNumbers> busNumbersCallback){
+        Log.d(TAG,"getAllBusNumbers");
+        ApiService apiService = getApiService();
+        Call<BusNumbers> busNumbers = apiService.getAllBusNumbers();
+        busNumbers.enqueue(busNumbersCallback);
+    }
     private ApiService getApiService() {
 
         if (apiService == null)
