@@ -18,5 +18,9 @@ public class Constants {
     public static final String XXXHDPI = "xxxhdpi";
     public static final String LDPI = "ldpi";
 
+    public static final class BundleIDs{
+
+        public static final String BUS_NUM_BUNDLE_ID = "bus_num_bundle_id";
+    }
 
 }

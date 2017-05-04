@@ -1,6 +1,7 @@
 package com.example.venkateshkashyap.mysuru_commute;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,11 +25,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
+import com.example.venkateshkashyap.mysuru_commute.fragments.BusRoutesBySrcDestFragment;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity implements BusNumbersFragment.OnListFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements BusNumbersFragment.OnListFragmentInteractionListener,BusRoutesBySrcDestFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -93,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
 
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -146,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
                 case 0:
                     return BusNumbersFragment.newInstance(1,"Bus Numbers");
                 case 1:
-                    return BusNumbersFragment.newInstance(1,"Bus Numbers");
+                    return BusRoutesBySrcDestFragment.newInstance("Source","Destination");
                 default:
                     return BusNumbersFragment.newInstance(1,"Bus Numbers");
             }
@@ -158,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
                 case 0:
                     return "Bus Numbers";
                 case 1:
-                    return "Bus Numbers";
+                    return "Bus Routes";
                 default:
                     return "Bus Numbers";
             }

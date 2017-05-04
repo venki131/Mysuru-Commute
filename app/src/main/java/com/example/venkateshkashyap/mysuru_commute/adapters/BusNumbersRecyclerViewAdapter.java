@@ -1,13 +1,15 @@
 package com.example.venkateshkashyap.mysuru_commute.adapters;
 
-import android.support.v7.widget.DividerItemDecoration;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.venkateshkashyap.mysuru_commute.R;
+import com.example.venkateshkashyap.mysuru_commute.RouteDetailsActivity;
+import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment.OnListFragmentInteractionListener;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
@@ -25,8 +27,10 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
     private BusNumbers mBusNumbersData = new BusNumbers();
     private List<String> mValues = new ArrayList<>();
     private final BusNumbersFragment.OnListFragmentInteractionListener mListener;
+    private Context context;
 
-    public BusNumbersRecyclerViewAdapter(BusNumbers busNumbersData, OnListFragmentInteractionListener listener) {
+    public BusNumbersRecyclerViewAdapter(Context context,BusNumbers busNumbersData, OnListFragmentInteractionListener listener) {
+        this.context = context;
         mBusNumbersData = busNumbersData;
         if(mBusNumbersData.getData()!=null) {
             mValues = mBusNumbersData.getData();
@@ -46,13 +50,18 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
+
+                    Intent intent = new Intent(context,RouteDetailsActivity.class);
+
+                    intent.putExtra(Constants.BundleIDs.BUS_NUM_BUNDLE_ID, holder.mItem);
+                    context.startActivity(intent);
                 }
             }
         });

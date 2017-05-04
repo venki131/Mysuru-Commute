@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.venkateshkashyap.mysuru_commute.R;
 import com.example.venkateshkashyap.mysuru_commute.Utils.DialogUtils;
@@ -92,7 +92,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
             mRecyclerView.setLayoutManager(gridLayoutManager);
         }
 
-        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(new BusNumbers(), mListener);
+        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(getContext(),new BusNumbers(), mListener);
 
 
         mRecyclerView.addItemDecoration(dividerItemDecoration);

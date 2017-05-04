@@ -3,16 +3,13 @@ package com.example.venkateshkashyap.mysuru_commute.NetworkManager;
 import android.util.Log;
 
 import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
+import com.example.venkateshkashyap.mysuru_commute.helpers.BusRoutesBySrcHelper;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
+import com.example.venkateshkashyap.mysuru_commute.models.BusRoutes;
 import com.example.venkateshkashyap.mysuru_commute.models.BusStops;
+import com.example.venkateshkashyap.mysuru_commute.models.RouteDetails;
 
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -56,6 +53,27 @@ public class NetworkManager {
         ApiService apiService = getApiService();
         Call<BusNumbers> busNumbers = apiService.getAllBusNumbers();
         busNumbers.enqueue(busNumbersCallback);
+    }
+
+    public void getRoutesBySrcDest(Callback<BusRoutes> busRoutesCallback, String source, String destination){
+        Log.d(TAG,"getAllBusRoutes");
+        ApiService apiService = getApiService();
+        Call<BusRoutes> busRoutes = apiService.getRoutesBySrcDest(source,destination);
+        busRoutes.enqueue(busRoutesCallback);
+    }
+
+    public void getRoutesBySrc(Callback<BusRoutes> busRoutesCallback,String busStop){
+        Log.d(TAG,"getAllBusStops");
+        ApiService apiService = getApiService();
+        Call<BusRoutes> busRoutes = apiService.getRoutesBySrc(busStop);
+        busRoutes.enqueue(busRoutesCallback);
+    }
+
+    public void getRoutesByBusNum(Callback<RouteDetails> busRoutesCallback, String busNum){
+        Log.d(TAG,"getAllBusStops");
+        ApiService apiService = getApiService();
+        Call<RouteDetails> busRoutes = apiService.getRoutesByBusNum(busNum);
+        busRoutes.enqueue(busRoutesCallback);
     }
     private ApiService getApiService() {
 
