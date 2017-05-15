@@ -44,7 +44,6 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     private static final String ARG_FRAGMENT_NAME = "fragment-name";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
     private BusNumbersRecyclerViewAdapter mBusNumbersRecyclerViewAdapter;
     private RelativeLayout mErrorLayout;
     private RelativeLayout mProgressLayout;
@@ -101,7 +100,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
             mRecyclerView.setLayoutManager(gridLayoutManager);
         }
 
-        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(getContext(),new BusNumbers(), mListener);
+        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(getContext(),new BusNumbers());
 
 
         mRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -115,18 +114,11 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override

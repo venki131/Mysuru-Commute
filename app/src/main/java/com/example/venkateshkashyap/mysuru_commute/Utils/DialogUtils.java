@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.venkateshkashyap.mysuru_commute.R;
-
+import com.example.venkateshkashyap.mysuru_commute.listeners.OkClickListener;
 
 
 /**
@@ -116,6 +116,45 @@ public class DialogUtils {
 
     }
 
+    public static void showCustomAlertDialog(Context mContext, Drawable drawable, String title, String message, String okText, final OkClickListener listener){
+        final Dialog alertDialog = new Dialog(mContext,
+                android.R.style.Theme_Translucent);
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        LayoutInflater mInflater = LayoutInflater.from(mContext);
+        View layout = mInflater.inflate(R.layout.dialog_layout, null);
+        alertDialog.setContentView(layout);
+
+        ImageView mImageView = (ImageView) layout.findViewById(R.id.img_error_image);
+        mImageView.setImageDrawable(drawable);
+
+        TextView mTitle = (TextView) layout.findViewById(R.id.text_title);
+        mTitle.setText(title);
+
+        TextView mMessage = (TextView) layout.findViewById(R.id.text_sub_title);
+
+        mMessage.setText(message);
+
+        alertDialog.setCancelable(false);
+
+        alertDialog.show();
+
+        TextView mOkButton = (TextView) layout.findViewById(R.id.text_try_again);
+
+        mOkButton.setText(okText);
+
+        mOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if(listener!=null)
+                    listener.onOkClicked();
+
+            }
+        });
+        // aiImage.post(new Starter(activityIndicator));
+
+    }
 
 
 }

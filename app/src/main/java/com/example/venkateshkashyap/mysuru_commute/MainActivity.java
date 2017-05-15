@@ -26,9 +26,11 @@ import android.widget.TextView;
 
 import com.example.venkateshkashyap.mysuru_commute.Utils.DialogUtils;
 import com.example.venkateshkashyap.mysuru_commute.Utils.Utils;
+import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusRoutesBySrcDestFragment;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
+import com.example.venkateshkashyap.mysuru_commute.models.BusStops;
 
 import java.util.zip.Inflater;
 
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private BusStops mBusStops;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -63,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(2);
+
+        mBusStops = getIntent().getParcelableExtra(Constants.BundleIDs.BUS_STOPS_BUNDLE_ID);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -101,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public BusStops getmBusStops() {
+        return mBusStops;
     }
 
     /**
@@ -177,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
     }
 

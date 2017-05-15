@@ -21,6 +21,9 @@ public class Constants {
     public static final class BundleIDs{
 
         public static final String BUS_NUM_BUNDLE_ID = "bus_num_bundle_id";
+        public static final String BUS_STOPS_BUNDLE_ID = "bus_stops_bundle_id";
+        public static final String SRC_DEST_BUNDLE_ID = "src_dest_bundle_id";
+        public static final String SRC_DEST_BUSES_BUNDLE_ID = "src_dest_buses_bundle_id";
     }
 
 }

@@ -26,16 +26,14 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
 
     private BusNumbers mBusNumbersData = new BusNumbers();
     private List<String> mValues = new ArrayList<>();
-    private final BusNumbersFragment.OnListFragmentInteractionListener mListener;
     private Context context;
 
-    public BusNumbersRecyclerViewAdapter(Context context,BusNumbers busNumbersData, OnListFragmentInteractionListener listener) {
+    public BusNumbersRecyclerViewAdapter(Context context,BusNumbers busNumbersData) {
         this.context = context;
         mBusNumbersData = busNumbersData;
         if(mBusNumbersData.getData()!=null) {
             mValues = mBusNumbersData.getData();
         }
-        mListener = listener;
     }
 
     @Override
@@ -53,17 +51,13 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+
 
                     Intent intent = new Intent(context,RouteDetailsActivity.class);
 
                     intent.putExtra(Constants.BundleIDs.BUS_NUM_BUNDLE_ID, holder.mItem);
                     context.startActivity(intent);
                 }
-            }
         });
     }
 

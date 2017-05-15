@@ -1,16 +1,31 @@
 package com.example.venkateshkashyap.mysuru_commute.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.venkateshkashyap.mysuru_commute.BusNumbersActivity;
+import com.example.venkateshkashyap.mysuru_commute.MainActivity;
 import com.example.venkateshkashyap.mysuru_commute.R;
+import com.example.venkateshkashyap.mysuru_commute.Utils.Utils;
+import com.example.venkateshkashyap.mysuru_commute.adapters.AutoCompleteStopsAdapter;
+import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
 import com.example.venkateshkashyap.mysuru_commute.helpers.BusRoutesBySrcDestHelper;
+import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 import com.example.venkateshkashyap.mysuru_commute.models.BusRoutes;
 
 /**
@@ -32,6 +47,10 @@ public class BusRoutesBySrcDestFragment extends Fragment implements BusRoutesByS
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private AutoCompleteTextView mAutoCompleteTextViewSource, mAutoCompleteTextViewDestination;
+    private View.OnTouchListener mOnTouchListener;
+    private Button mButtonSearch;
+    private Boolean mSourceValueSet = false;
 
     public BusRoutesBySrcDestFragment() {
         // Required empty public constructor
@@ -67,15 +86,95 @@ public class BusRoutesBySrcDestFragment extends Fragment implements BusRoutesByS
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_bus_routes_by_src_dest, container, false);
+        final AutoCompleteStopsAdapter adapter = new AutoCompleteStopsAdapter(getContext(), ((MainActivity)getActivity()).getmBusStops().getData());
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bus_routes_by_src_dest, container, false);
+
+        mAutoCompleteTextViewSource = (AutoCompleteTextView) view.findViewById(R.id.auto_complete_txt_source);
+        mAutoCompleteTextViewDestination = (AutoCompleteTextView) view.findViewById(R.id.auto_complete_txt_destination);
+
+        mButtonSearch = (Button) view.findViewById(R.id.btn_search);
+
+        mAutoCompleteTextViewSource.setThreshold(1);//will start working from first character
+        mAutoCompleteTextViewSource.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+        mAutoCompleteTextViewSource.setTextColor(Color.BLACK);
+
+        mAutoCompleteTextViewDestination.setThreshold(1);//will start working from first character
+        mAutoCompleteTextViewDestination.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+        mAutoCompleteTextViewDestination.setTextColor(Color.BLACK);
+
+        mOnTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if (view.getId() == R.id.auto_complete_txt_source) {
+                    if (mAutoCompleteTextViewSource.getText().toString().length() == 0) {
+                        mAutoCompleteTextViewSource.showDropDown();
+                    }
+                    return false;
+                } else if (view.getId() == R.id.auto_complete_txt_destination) {
+                    mAutoCompleteTextViewDestination.showDropDown();
+                }
+                return false;
+            }
+        };
+
+        mButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mSourceValueSet){
+                    Utils.hideKeyboard(getActivity());
+                    new BusRoutesBySrcDestHelper(getContext()).getRoutesBySrcDest(BusRoutesBySrcDestFragment.this, mAutoCompleteTextViewSource.getText().toString(), mAutoCompleteTextViewDestination.getText().toString());
+                }
+            }
+        });
+
+
+
+        mAutoCompleteTextViewSource.setOnTouchListener(mOnTouchListener);
+        mAutoCompleteTextViewDestination.setOnTouchListener(mOnTouchListener);
+
+        mAutoCompleteTextViewSource.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedStop = adapter.getItem(position);
+                mAutoCompleteTextViewSource.setText(selectedStop);
+                mAutoCompleteTextViewSource.setSelection(selectedStop.length());
+                mSourceValueSet = true;
+                mButtonSearch.setEnabled(true);
+            }
+        });
+
+
+        mAutoCompleteTextViewDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedStop = adapter.getItem(position);
+                mAutoCompleteTextViewDestination.setText(selectedStop);
+                mAutoCompleteTextViewDestination.setSelection(selectedStop.length());
+            }
+        });
+
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if(isVisibleToUser){
+            if(TextUtils.isEmpty(mAutoCompleteTextViewSource.getText().toString())) {
+                mAutoCompleteTextViewSource.requestFocus();
+                mAutoCompleteTextViewSource.requestFocusFromTouch();
+                mAutoCompleteTextViewSource.performClick();
+            }else if(TextUtils.isEmpty(mAutoCompleteTextViewDestination.getText().toString())){
+                mAutoCompleteTextViewDestination.requestFocus();
+                mAutoCompleteTextViewDestination.requestFocusFromTouch();
+                mAutoCompleteTextViewSource.performClick();
+            }
         }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
@@ -99,12 +198,36 @@ public class BusRoutesBySrcDestFragment extends Fragment implements BusRoutesByS
     @Override
     public void onBusRoutesResponseReceived(BusRoutes busRoutesData) {
 
+        if(busRoutesData!=null && busRoutesData.getData()!=null && busRoutesData.getData().size()!=0){
+            Intent intent = new Intent(getActivity(), BusNumbersActivity.class);
+            BusNumbers busNumbers = new BusNumbers();
+            busNumbers.setData(busRoutesData.getData());
+            intent.putExtra(Constants.BundleIDs.SRC_DEST_BUSES_BUNDLE_ID,busNumbers);
+            String srcDestString = mAutoCompleteTextViewSource.getText().toString();
+
+            if(!TextUtils.isEmpty(mAutoCompleteTextViewDestination.getText().toString())){
+                srcDestString+= " - "+mAutoCompleteTextViewDestination.getText().toString();
+            }
+            intent.putExtra(Constants.BundleIDs.SRC_DEST_BUNDLE_ID,srcDestString);
+
+            startActivity(intent);
+        }else{
+            Snackbar.make(mButtonSearch, "No Buses in this Route! Try changing the source",Snackbar.LENGTH_LONG).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Do Nothing
+                }
+            }).show();
+        }
+
     }
 
     @Override
     public void onFailure() {
 
     }
+
+
 
 
     /**

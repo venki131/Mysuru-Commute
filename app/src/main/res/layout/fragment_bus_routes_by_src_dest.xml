@@ -2,47 +2,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.example.venkateshkashyap.mysuru_commute.fragments.BusRoutesBySrcDestFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-
-    <EditText
-        android:id="@+id/txt_source"
+    <AutoCompleteTextView
+        android:id="@+id/auto_complete_txt_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/dp_40"
         android:layout_marginRight="@dimen/dp_40"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="@dimen/dp_60"
         android:background="@drawable/textbox_background_top"
         android:gravity="center_vertical"
         android:hint="Source"
-        android:padding="@dimen/dp_5" />
+        android:padding="@dimen/dp_15" />
 
 
-    <EditText
-        android:id="@+id/txt_destination"
+    <AutoCompleteTextView
+        android:id="@+id/auto_complete_txt_destination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_source"
+        android:layout_below="@+id/auto_complete_txt_source"
         android:layout_marginLeft="@dimen/dp_40"
         android:layout_marginRight="@dimen/dp_40"
+        android:layout_marginTop="-2dp"
         android:background="@drawable/textbox_background_bottom"
         android:gravity="center_vertical"
         android:hint="Destination"
-        android:padding="@dimen/dp_5" />
+        android:padding="@dimen/dp_15" />
 
 
     <Button
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_destination"
+        android:layout_below="@+id/auto_complete_txt_destination"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
         android:clickable="true"
         android:gravity="center"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/black"
+        android:enabled="false"
         android:text="search" />
 </RelativeLayout>
