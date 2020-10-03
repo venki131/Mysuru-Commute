@@ -1,17 +1,12 @@
 package com.example.venkateshkashyap.mysuru_commute.helpers;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.venkateshkashyap.mysuru_commute.NetworkManager.NetworkManager;
-import com.example.venkateshkashyap.mysuru_commute.R;
 import com.example.venkateshkashyap.mysuru_commute.Utils.DialogUtils;
 import com.example.venkateshkashyap.mysuru_commute.Utils.NetworkUtil;
-import com.example.venkateshkashyap.mysuru_commute.Utils.Utils;
 import com.example.venkateshkashyap.mysuru_commute.models.BusStops;
 
 import retrofit2.Call;

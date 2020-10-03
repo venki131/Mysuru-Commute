@@ -2,11 +2,11 @@ package com.example.venkateshkashyap.mysuru_commute.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.example.venkateshkashyap.mysuru_commute.R;
 import com.example.venkateshkashyap.mysuru_commute.RouteDetailsActivity;
 import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
@@ -16,6 +16,8 @@ import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.example.venkateshkashyap.mysuru_commute.models.BusNumbers} and makes a call to the

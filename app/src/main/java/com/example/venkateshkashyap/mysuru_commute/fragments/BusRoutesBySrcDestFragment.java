@@ -3,7 +3,6 @@ package com.example.venkateshkashyap.mysuru_commute.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import android.widget.Toast;
 import com.example.venkateshkashyap.mysuru_commute.R;
 import com.example.venkateshkashyap.mysuru_commute.helpers.BusRoutesBySrcDestHelper;
 import com.example.venkateshkashyap.mysuru_commute.models.BusRoutes;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.

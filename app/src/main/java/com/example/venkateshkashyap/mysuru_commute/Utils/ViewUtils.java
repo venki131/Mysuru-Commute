@@ -1,12 +1,12 @@
 package com.example.venkateshkashyap.mysuru_commute.Utils;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.CountDownTimer;
-import android.support.design.widget.AppBarLayout;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 
 /**

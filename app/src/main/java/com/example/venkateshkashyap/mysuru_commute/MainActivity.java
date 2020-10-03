@@ -1,44 +1,36 @@
 package com.example.venkateshkashyap.mysuru_commute;
 
-import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusRoutesBySrcDestFragment;
-import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
+import com.google.android.material.tabs.TabLayout;
 
-import java.util.zip.Inflater;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity implements BusNumbersFragment.OnListFragmentInteractionListener,BusRoutesBySrcDestFragment.OnFragmentInteractionListener{
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -150,32 +142,24 @@ public class MainActivity extends AppCompatActivity implements BusNumbersFragmen
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            switch (position){
-                case 0:
-                    return BusNumbersFragment.newInstance(1,"Bus Numbers");
-                case 1:
-                    return BusRoutesBySrcDestFragment.newInstance("Source","Destination");
-                default:
-                    return BusNumbersFragment.newInstance(1,"Bus Numbers");
+            if (position == 1) {
+                return BusRoutesBySrcDestFragment.newInstance("Source", "Destination");
             }
+            return BusNumbersFragment.newInstance(1, "Bus Numbers");
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position){
-                case 0:
-                    return "Bus Numbers";
-                case 1:
-                    return "Bus Routes";
-                default:
-                    return "Bus Numbers";
+            if (position == 1) {
+                return "Bus Routes";
             }
+            return "Bus Numbers";
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 2 total pages.
+            return 2;
         }
     }
 
