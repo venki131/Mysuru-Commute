@@ -1,10 +1,6 @@
 package com.example.venkateshkashyap.mysuru_commute;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -12,15 +8,16 @@ import com.example.venkateshkashyap.mysuru_commute.Utils.DialogUtils;
 import com.example.venkateshkashyap.mysuru_commute.Utils.ViewUtils;
 import com.example.venkateshkashyap.mysuru_commute.adapters.RouteDetailsRecyclerViewAdapter;
 import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
-import com.example.venkateshkashyap.mysuru_commute.helpers.BusNumbersHelper;
 import com.example.venkateshkashyap.mysuru_commute.helpers.RouteDetailslByBusNumberHelper;
-import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 import com.example.venkateshkashyap.mysuru_commute.models.RouteDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Route;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RouteDetailsActivity extends AppCompatActivity implements RouteDetailslByBusNumberHelper.OnRouteDetailsResponseReceived{
 

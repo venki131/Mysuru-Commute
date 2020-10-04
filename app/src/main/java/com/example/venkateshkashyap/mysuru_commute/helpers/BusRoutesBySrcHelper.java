@@ -1,7 +1,6 @@
 package com.example.venkateshkashyap.mysuru_commute.helpers;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +12,7 @@ import com.example.venkateshkashyap.mysuru_commute.Utils.NetworkUtil;
 import com.example.venkateshkashyap.mysuru_commute.Utils.Utils;
 import com.example.venkateshkashyap.mysuru_commute.models.BusRoutes;
 
+import androidx.core.content.ContextCompat;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
