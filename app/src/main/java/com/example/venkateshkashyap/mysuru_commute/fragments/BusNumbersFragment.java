@@ -12,7 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.venkateshkashyap.mysuru_commute.R;
+import com.example.venkateshkashyap.mysuru_commute.Utils.Utils;
 import com.example.venkateshkashyap.mysuru_commute.Utils.ViewUtils;
 import com.example.venkateshkashyap.mysuru_commute.adapters.BusNumbersRecyclerViewAdapter;
 import com.example.venkateshkashyap.mysuru_commute.helpers.BusNumbersHelper;
@@ -20,13 +30,6 @@ import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A fragment representing a list of Items.
@@ -41,7 +44,6 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     private static final String ARG_FRAGMENT_NAME = "fragment-name";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
     private BusNumbersRecyclerViewAdapter mBusNumbersRecyclerViewAdapter;
     private RelativeLayout mErrorLayout;
     private RelativeLayout mProgressLayout;
@@ -98,7 +100,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
             mRecyclerView.setLayoutManager(gridLayoutManager);
         }
 
-        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(getContext(),new BusNumbers(), mListener);
+        mBusNumbersRecyclerViewAdapter = new BusNumbersRecyclerViewAdapter(getContext(),new BusNumbers());
 
 
         mRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -110,28 +112,31 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
 
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+
+        if(isAdded()&& isVisible() && isVisibleToUser){
+            Utils.hideKeyboard(getActivity());
+        }
+
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.menu_bus_numbers, menu);
-        final MenuItem menuItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) menuItem.getActionView();
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(getActivity().SEARCH_SERVICE);
@@ -140,7 +145,7 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
 
@@ -204,10 +209,10 @@ public class BusNumbersFragment extends Fragment implements BusNumbersHelper.OnB
 
         final List<String> filteredModelList = new ArrayList<>();
         for (String model : models) {
-                final String text = model.toLowerCase();
-                if (text.contains(query)) {
-                    filteredModelList.add(model);
-                }
+            final String text = model.toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
 
         }
         return filteredModelList;

@@ -1,6 +1,7 @@
 package com.example.venkateshkashyap.mysuru_commute;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -13,6 +14,7 @@ import com.example.venkateshkashyap.mysuru_commute.models.RouteDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,8 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RouteDetailsActivity extends AppCompatActivity implements RouteDetailslByBusNumberHelper.OnRouteDetailsResponseReceived{
 
     private RouteDetailsRecyclerViewAdapter mRouteDetailsRecyclerViewAdapter;
-    private RouteDetails mRouteDetails;
-    private List<String> mRouteLists;
     private RelativeLayout mErrorLayout;
     private RecyclerView mRecyclerView;
 
@@ -34,9 +34,9 @@ public class RouteDetailsActivity extends AppCompatActivity implements RouteDeta
 
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mErrorLayout= (RelativeLayout) findViewById(R.id.rl_error_layout);
-        mRouteDetails = new RouteDetails();
-        mRouteLists = new ArrayList<>();
-        mRouteDetailsRecyclerViewAdapter = new RouteDetailsRecyclerViewAdapter(RouteDetailsActivity.this,mRouteDetails,mRouteLists);
+        RouteDetails mRouteDetails = new RouteDetails();
+        List<String> mRouteLists = new ArrayList<>();
+        mRouteDetailsRecyclerViewAdapter = new RouteDetailsRecyclerViewAdapter(RouteDetailsActivity.this, mRouteDetails, mRouteLists);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -45,7 +45,19 @@ public class RouteDetailsActivity extends AppCompatActivity implements RouteDeta
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.setAdapter(mRouteDetailsRecyclerViewAdapter);
 
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getIntent().getStringExtra(Constants.BundleIDs.BUS_NUM_BUNDLE_ID));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         new RouteDetailslByBusNumberHelper(this).getRoutesByBusNum((RouteDetailslByBusNumberHelper.OnRouteDetailsResponseReceived) this, mErrorLayout, mRecyclerView, getIntent().getStringExtra(Constants.BundleIDs.BUS_NUM_BUNDLE_ID));
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     private void updateList(RouteDetails routeDetails) {
@@ -53,8 +65,9 @@ public class RouteDetailsActivity extends AppCompatActivity implements RouteDeta
             ViewUtils.hideTheViews(mErrorLayout);
             ViewUtils.showTheViews(mRecyclerView);
         }
-         mRouteDetailsRecyclerViewAdapter.setList(routeDetails);
+        mRouteDetailsRecyclerViewAdapter.setList(routeDetails);
     }
+
 
     @Override
     public void onRouteDetailsResponseReceived(RouteDetails routeDetails) {

@@ -1,5 +1,8 @@
 package com.example.venkateshkashyap.mysuru_commute.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,7 @@ import java.util.List;
  * Created by Venkatesh Kashyap on 5/4/2017.
  */
 
-public class BusNumbers {
+public class BusNumbers implements Parcelable{
     @SerializedName("message")
     @Expose
     private String message;
@@ -18,7 +21,28 @@ public class BusNumbers {
     private List<String> data = null;
     @SerializedName("status_code")
     @Expose
-    private Integer statusCode;
+    private int statusCode;
+
+    protected BusNumbers(Parcel in) {
+        message = in.readString();
+        data = in.createStringArrayList();
+        statusCode = in.readInt();
+    }
+
+    public static final Creator<BusNumbers> CREATOR = new Creator<BusNumbers>() {
+        @Override
+        public BusNumbers createFromParcel(Parcel in) {
+            return new BusNumbers(in);
+        }
+
+        @Override
+        public BusNumbers[] newArray(int size) {
+            return new BusNumbers[size];
+        }
+    };
+
+    public BusNumbers() {
+    }
 
     public String getMessage() {
         return message;
@@ -36,14 +60,24 @@ public class BusNumbers {
         this.data = data;
     }
 
-    public Integer getStatusCode() {
+    public int getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(Integer statusCode) {
+    public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 
-}
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(message);
+        parcel.writeStringList(data);
+        parcel.writeInt(statusCode);
+    }
+}
 

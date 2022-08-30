@@ -1,5 +1,6 @@
 package com.example.venkateshkashyap.mysuru_commute.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,17 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.venkateshkashyap.mysuru_commute.R;
 import com.example.venkateshkashyap.mysuru_commute.RouteDetailsActivity;
 import com.example.venkateshkashyap.mysuru_commute.constants.Constants;
-import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment;
 import com.example.venkateshkashyap.mysuru_commute.fragments.BusNumbersFragment.OnListFragmentInteractionListener;
 import com.example.venkateshkashyap.mysuru_commute.models.BusNumbers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.example.venkateshkashyap.mysuru_commute.models.BusNumbers} and makes a call to the
@@ -26,20 +27,19 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbersRecyclerViewAdapter.ViewHolder> {
 
-    private BusNumbers mBusNumbersData = new BusNumbers();
+    private BusNumbers mBusNumbersData;
     private List<String> mValues = new ArrayList<>();
-    private final BusNumbersFragment.OnListFragmentInteractionListener mListener;
     private Context context;
 
-    public BusNumbersRecyclerViewAdapter(Context context,BusNumbers busNumbersData, OnListFragmentInteractionListener listener) {
+    public BusNumbersRecyclerViewAdapter(Context context,BusNumbers busNumbersData) {
         this.context = context;
         mBusNumbersData = busNumbersData;
         if(mBusNumbersData.getData()!=null) {
             mValues = mBusNumbersData.getData();
         }
-        mListener = listener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -52,23 +52,14 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-
-                    Intent intent = new Intent(context,RouteDetailsActivity.class);
-
-                    intent.putExtra(Constants.BundleIDs.BUS_NUM_BUNDLE_ID, holder.mItem);
-                    context.startActivity(intent);
-                }
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context,RouteDetailsActivity.class);
+            intent.putExtra(Constants.BundleIDs.BUS_NUM_BUNDLE_ID, holder.mItem);
+            context.startActivity(intent);
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setList(BusNumbers busNumbersData) {
         mBusNumbersData = busNumbersData;
         mValues.clear();
@@ -131,7 +122,7 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
 
     @Override
     public int getItemCount() {
-            return mValues.size();
+        return mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -145,6 +136,7 @@ public class BusNumbersRecyclerViewAdapter extends RecyclerView.Adapter<BusNumbe
             mContentView = (TextView) view.findViewById(R.id.content);
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
