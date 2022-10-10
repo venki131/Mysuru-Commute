@@ -1,8 +1,13 @@
 <br>
 
 <p>
-  Mysuru-Commute is an Android app built to find City buses in Mysore.
+  Mysuru-Commute is an Android app built to find City buses in Mysore. 
+App has 2 sections - 
+1. Routes
+2. Bus Numbers
 
+In Routes, user can find a bus using Source and Destination points. In Bus Numbers, user can find bus by its bus number.
+  
 <br>
 <hr />
 <br />
